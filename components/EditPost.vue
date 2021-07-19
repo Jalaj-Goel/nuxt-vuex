@@ -100,7 +100,7 @@ export default {
       );
     },
     errToast(variant = "danger") {
-      this.$bvToast.toast("Toast is not edited", {
+      this.$bvToast.toast("Post is not edited", {
         variant: variant,
         solid: true,
       });

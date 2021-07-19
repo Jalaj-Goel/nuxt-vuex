@@ -16,7 +16,6 @@ export const mutations = {
 
 export const getters = {
     getPost: state => state = state.posts,
-
 }
 
 export const actions = {
