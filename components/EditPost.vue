@@ -1,38 +1,41 @@
 <template>
   <div>
-    <b-modal
-      id="modal-prevent-closing"
-      ref="modal"
-      title="Edit"
-      @show="resetModal"
-      @hidden="resetModal"
-      @ok="handleOk"
-    >
+    <b-modal id="modal-prevent-closing" ref="modal" title="Edit" @ok="handleOk">
       <form ref="form" @submit.stop.prevent="handleSubmit">
         <b-form-group
-          label="Title"
-          label-for="title-input"
-          invalid-feedback="title required"
-        >
-          <b-form-input
-            id="title-input"
-            v-model="edit.title"
-            aria-describedby="title-val"
-            required
-          ></b-form-input>
-          <b-form-invalid-feedback id="title-val"
-            >This is a required field and must be at least 3
-            characters.</b-form-invalid-feedback
-          >
-        </b-form-group>
-        <b-form-group
-          label="Body"
-          label-for="body-input"
-          invalid-feedback="Body required"
+          label="Name"
+          label-for="name-input"
+          invalid-feedback="Name required"
         >
           <b-form-input
             id="name-input"
-            v-model="edit.body"
+            v-model="edit.name"
+            aria-describedby="name-val"
+            required
+          ></b-form-input>
+          <b-form-invalid-feedback id="name-val"
+            >This is a required field</b-form-invalid-feedback
+          >
+        </b-form-group>
+        <b-form-group
+          label="Age"
+          label-for="age-input"
+          invalid-feedback="Age required"
+        >
+          <b-form-input
+            id="age-input"
+            v-model="edit.age"
+            required
+          ></b-form-input>
+        </b-form-group>
+        <b-form-group
+          label="Color"
+          label-for="color-input"
+          invalid-feedback="Color required"
+        >
+          <b-form-input
+            id="color-input"
+            v-model="edit.colour"
             required
           ></b-form-input>
         </b-form-group>
@@ -56,10 +59,11 @@ export default {
       return valid;
     },
 
-    resetModal() {
-      this.edit.title = "";
-      this.edit.body = "";
-    },
+    // resetModal() {
+    //   this.edit.name = "";
+    //   this.edit.age = "";
+    //   this.edit.colour = "";
+    // },
     handleOk(bvModalEvt) {
       // Prevent modal from closing
       bvModalEvt.preventDefault();
@@ -72,13 +76,17 @@ export default {
       if (!this.checkFormValidity()) {
         return;
       }
+      console.log(JSON.stringify(this.edit), "edit");
       axios
-        .patch(`https://jsonplaceholder.typicode.com/posts/${this.edit.id}`, {
-          ...this.edit,
-        })
+        .put(
+          `https://crudcrud.com/api/c777d368f24f40e7b4810d8bb6e80838/unicorns/${this.edit._id}`,
+          JSON.stringify(this.edit)
+        )
         .then((res) => {
           if (res) {
+            console.log(res.data);
             this.makeToast();
+            // this.$store.dispatch("getPosts",res);
           } else {
             this.errToast();
           }
@@ -92,7 +100,7 @@ export default {
     },
     makeToast(variant = "success") {
       this.$bvToast.toast(
-        `Post with id ' ${this.edit.id} ' is edited successfully`,
+        `Post with id ' ${this.edit._id} ' is edited successfully`,
         {
           variant: variant,
           solid: true,

@@ -5,23 +5,27 @@
       <NuxtLink to="/">Back to Home</NuxtLink>
     </h6>
     <b-form @submit="submitForm" @reset="onReset">
-      <b-form-group
-        id="input-group-title"
-        label="Title:"
-        label-for="input-tite"
-      >
+      <b-form-group id="input-group-name" label="Name:" label-for="input-name">
         <b-form-input
-          id="input-title"
-          v-model="form.title"
+          id="input-name"
+          v-model="form.name"
           type="text"
           required
         ></b-form-input>
       </b-form-group>
 
-      <b-form-group id="input-group-body" label="Body:" label-for="input-body">
+      <b-form-group id="input-group-age" label="Age:" label-for="input-age">
+        <b-form-input id="input-age" v-model="form.age" required></b-form-input>
+      </b-form-group>
+
+      <b-form-group
+        id="input-group-colour"
+        label="Colour:"
+        label-for="input-colour"
+      >
         <b-form-input
-          id="input-body"
-          v-model="form.body"
+          id="input-colour"
+          v-model="form.colour"
           required
         ></b-form-input>
       </b-form-group>
@@ -46,8 +50,9 @@ export default {
   data() {
     return {
       form: {
-        title: "",
-        body: "",
+        name: "",
+        age: "",
+        colour: "",
       },
     };
   },
@@ -55,10 +60,14 @@ export default {
     submitForm(event) {
       event.preventDefault();
       axios
-        .post("https://jsonplaceholder.typicode.com/posts", {
-          title: this.form.title,
-          body: this.form.body,
-        })
+        .post(
+          "https://crudcrud.com/api/c777d368f24f40e7b4810d8bb6e80838/unicorns",
+          {
+            name: this.form.name,
+            age: this.form.age,
+            colour: this.form.colour,
+          }
+        )
         .then((res) => {
           this.makeToast("success");
           this.$store.state.posts.push(res.data);

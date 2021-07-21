@@ -9,27 +9,29 @@
       </div>
     </div>
     <h1>Table</h1>
-    <div v-if="posts.length > 1">
+    <div v-if="posts.length >= 1">
       <table border="1px">
         <thead>
           <td><b> Id </b></td>
-          <td>Title</td>
-          <td>Body</td>
+          <td>Name</td>
+          <td>Age</td>
+          <td>Color</td>
           <td>Action</td>
         </thead>
-        <tbody v-for="post in posts" :key="post.id">
+        <tbody v-for="post in posts" :key="post._id">
           <td>
-            {{ post.id }}
+            {{ post._id }}
           </td>
           <td>
-            {{ post.title }}
+            {{ post.name }}
           </td>
-          <td>{{ post.body }}</td>
+          <td>{{ post.age }}</td>
+          <td>{{ post.colour }}</td>
           <td>
             <b-button-group>
               <b-button
                 v-b-modal.modal-prevent-closing
-                v-on:click="editPost(post.id)"
+                v-on:click="editPost(post._id)"
                 variant="primary"
               >
                 Edit
@@ -37,7 +39,7 @@
               <b-button
                 v-b-modal.modal-sm
                 variant="danger"
-                v-on:click="showDeleteModal(post.id)"
+                v-on:click="showDeleteModal(post._id)"
               >
                 Delete
               </b-button>
@@ -65,6 +67,8 @@ export default {
   },
   data() {
     return {
+      fields: ["Name", "Age"],
+      // posts: this.$store.getters.getPost
       editP: [],
       edit: false,
       loading: true,
@@ -74,7 +78,8 @@ export default {
   computed: {
     posts() {
       this.loading = false;
-      return this.$store.getters.getPost;
+      const items = this.$store.getters.getPost;
+      return items;
     },
   },
 
@@ -97,10 +102,13 @@ export default {
         .then((value) => {
           if (value == true) {
             axios
-              .delete("https://jsonplaceholder.typicode.com/posts/" + id)
+              .delete(
+                "https://crudcrud.com/api/c777d368f24f40e7b4810d8bb6e80838/unicorns/" +
+                  id
+              )
               .then((res) => {
                 this.makeToast("success", id);
-                this.$store.state.posts.splice(id - 1, 1);
+                this.$store.dispatch("getPosts");
               });
           }
         })
@@ -113,7 +121,9 @@ export default {
     editPost(id) {
       this.edit = true;
       axios
-        .get(`https://jsonplaceholder.typicode.com/posts/${id}`)
+        .get(
+          `https://crudcrud.com/api/c777d368f24f40e7b4810d8bb6e80838/unicorns/${id}`
+        )
         .then((res) => {
           this.editP = res.data;
         })
@@ -132,15 +142,26 @@ export default {
 <style scoped>
 table {
   margin-top: 17px;
-  display: block;
-  height: 500px;
-  overflow-y: auto;
-}
-tr {
+  /* display: block; */
+  /* height: 500px; */
+  border: 1px solid #ccc;
+  border-collapse: collapse;
+  /* margin: 0; */
+  padding: 0;
   width: 100%;
+  /* table-layout: fixed; */
+}
+td {
+  /* width: 100%; */
+  text-align: center;
 }
 thead {
-  position: sticky;
+  /* position: sticky; */
+  padding: 0.625em;
+  text-align: center;
+  font-size: 1em;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 h1 {
   text-align: center;
