@@ -22,9 +22,8 @@ export const actions = {
     //asynchronous
     async getPosts({ commit }) {
         // await axios.get('https://jsonplaceholder.typicode.com/posts')
-        await axios.get(`https://crudcrud.com/api/c777d368f24f40e7b4810d8bb6e80838/unicorns`)
+        await axios.get(`https://crudcrud.com/api/611d87edab1645aea3fb1ad5e3f6ff54/unicorns`)
             .then((response) => {
-                console.log(response.data, "response")
                 commit('SET_POSTS', response.data)
             }).catch(err => console.error(err))
     },

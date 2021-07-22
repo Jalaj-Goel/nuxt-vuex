@@ -39,7 +39,7 @@
               <b-button
                 v-b-modal.modal-sm
                 variant="danger"
-                v-on:click="showDeleteModal(post._id)"
+                v-on:click="showDeleteModal(post.name)"
               >
                 Delete
               </b-button>
@@ -87,9 +87,9 @@ export default {
     this.$store.dispatch("getPosts");
   },
   methods: {
-    showDeleteModal(id) {
+    showDeleteModal(name) {
       this.$bvModal
-        .msgBoxConfirm(`Are you sure you want to delete item ${id}?`, {
+        .msgBoxConfirm(`Are you sure you want to delete item ${name}?`, {
           size: "sm",
           buttonSize: "sm",
           okVariant: "danger",
@@ -103,7 +103,7 @@ export default {
           if (value == true) {
             axios
               .delete(
-                "https://crudcrud.com/api/c777d368f24f40e7b4810d8bb6e80838/unicorns/" +
+                "https://crudcrud.com/api/611d87edab1645aea3fb1ad5e3f6ff54/unicorns/" +
                   id
               )
               .then((res) => {
@@ -122,7 +122,7 @@ export default {
       this.edit = true;
       axios
         .get(
-          `https://crudcrud.com/api/c777d368f24f40e7b4810d8bb6e80838/unicorns/${id}`
+          `https://crudcrud.com/api/611d87edab1645aea3fb1ad5e3f6ff54/unicorns/${id}`
         )
         .then((res) => {
           this.editP = res.data;

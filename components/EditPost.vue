@@ -76,17 +76,20 @@ export default {
       if (!this.checkFormValidity()) {
         return;
       }
-      console.log(JSON.stringify(this.edit), "edit");
+
       axios
         .put(
-          `https://crudcrud.com/api/c777d368f24f40e7b4810d8bb6e80838/unicorns/${this.edit._id}`,
-          JSON.stringify(this.edit)
+          `https://crudcrud.com/api/611d87edab1645aea3fb1ad5e3f6ff54/unicorns/${this.edit._id}`,
+          {
+            name: this.edit.name,
+            age: this.edit.age,
+            colour: this.edit.colour,
+          }
         )
         .then((res) => {
           if (res) {
-            console.log(res.data);
             this.makeToast();
-            // this.$store.dispatch("getPosts",res);
+            this.$store.dispatch("getPosts");
           } else {
             this.errToast();
           }
