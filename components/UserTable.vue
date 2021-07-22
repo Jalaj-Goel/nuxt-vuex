@@ -12,7 +12,7 @@
     <div v-if="posts.length >= 1">
       <table border="1px">
         <thead>
-          <td><b> Id </b></td>
+          <td>Id</td>
           <td>Name</td>
           <td>Age</td>
           <td>Color</td>
@@ -39,7 +39,7 @@
               <b-button
                 v-b-modal.modal-sm
                 variant="danger"
-                v-on:click="showDeleteModal(post.name)"
+                v-on:click="showDeleteModal(post._id, post.name)"
               >
                 Delete
               </b-button>
@@ -48,7 +48,7 @@
         </tbody>
       </table>
       <div v-if="edit == true">
-        <EditPost :edit="editP" @formData="owndata" :loading="loading" />
+        <EditPost :edit="editP" @formData="owndata" />
       </div>
     </div>
   </div>
@@ -57,18 +57,14 @@
 <script>
 import axios from "axios";
 import EditPost from "./EditPost.vue";
-import Loader from "./loader.vue";
 
 export default {
   name: "UserTable",
   components: {
     EditPost,
-    Loader,
   },
   data() {
     return {
-      fields: ["Name", "Age"],
-      // posts: this.$store.getters.getPost
       editP: [],
       edit: false,
       loading: true,
@@ -87,28 +83,34 @@ export default {
     this.$store.dispatch("getPosts");
   },
   methods: {
-    showDeleteModal(name) {
+    showDeleteModal(id, name) {
+      this.loading = true;
       this.$bvModal
-        .msgBoxConfirm(`Are you sure you want to delete item ${name}?`, {
-          size: "sm",
-          buttonSize: "sm",
-          okVariant: "danger",
-          okTitle: "Delete",
-          cancelVariant: "primary",
-          footerClass: "p-2",
-          hideHeaderClose: false,
-          centered: true,
-        })
+        .msgBoxConfirm(
+          `Are you sure you want to delete item ${name}?`,
+          {
+            size: "sm",
+            buttonSize: "sm",
+            okVariant: "danger",
+            okTitle: "Delete",
+            cancelVariant: "primary",
+            footerClass: "p-2",
+            hideHeaderClose: false,
+            centered: true,
+          },
+          (this.loading = false)
+        )
         .then((value) => {
           if (value == true) {
+            this.loading = true;
             axios
               .delete(
-                "https://crudcrud.com/api/611d87edab1645aea3fb1ad5e3f6ff54/unicorns/" +
-                  id
+                `https://crudcrud.com/api/31cd0cc672c14499bdfe9db7fdf48d56/unicorns/${id}`
               )
               .then((res) => {
                 this.makeToast("success", id);
                 this.$store.dispatch("getPosts");
+                this.loading = false;
               });
           }
         })
@@ -120,12 +122,14 @@ export default {
     owndata(username) {},
     editPost(id) {
       this.edit = true;
+      this.loading = true;
       axios
         .get(
-          `https://crudcrud.com/api/611d87edab1645aea3fb1ad5e3f6ff54/unicorns/${id}`
+          `https://crudcrud.com/api/31cd0cc672c14499bdfe9db7fdf48d56/unicorns/${id}`
         )
         .then((res) => {
           this.editP = res.data;
+          this.loading = false;
         })
         .catch((err) => console.error(err));
     },
@@ -152,7 +156,6 @@ table {
   /* table-layout: fixed; */
 }
 td {
-  /* width: 100%; */
   text-align: center;
 }
 thead {
@@ -160,6 +163,7 @@ thead {
   padding: 0.625em;
   text-align: center;
   font-size: 1em;
+  font-weight: bold;
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }

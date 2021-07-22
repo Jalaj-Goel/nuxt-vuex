@@ -1,5 +1,13 @@
 <template>
-  <div>
+  <div class="container">
+    <div
+      v-if="loading == true"
+      class="d-flex justify-content-center loading-page"
+    >
+      <div class="align-self-center">
+        <b-spinner label="Spinning" variant="primary"></b-spinner>
+      </div>
+    </div>
     <b-modal id="modal-prevent-closing" ref="modal" title="Edit" @ok="handleOk">
       <form ref="form" @submit.stop.prevent="handleSubmit">
         <b-form-group
@@ -50,7 +58,7 @@ export default {
   name: "EditPost",
   data() {
     return {
-      nameState: null,
+      loading: false,
     };
   },
   methods: {
@@ -58,28 +66,18 @@ export default {
       const valid = this.$refs.form.checkValidity();
       return valid;
     },
-
-    // resetModal() {
-    //   this.edit.name = "";
-    //   this.edit.age = "";
-    //   this.edit.colour = "";
-    // },
     handleOk(bvModalEvt) {
-      // Prevent modal from closing
       bvModalEvt.preventDefault();
-      // Trigger submit handler
-      this.$emit("formData", this.edit);
       this.handleSubmit();
     },
     handleSubmit() {
-      // Exit when the form isn't valid
+      this.loading = true;
       if (!this.checkFormValidity()) {
         return;
       }
-
       axios
         .put(
-          `https://crudcrud.com/api/611d87edab1645aea3fb1ad5e3f6ff54/unicorns/${this.edit._id}`,
+          `https://crudcrud.com/api/31cd0cc672c14499bdfe9db7fdf48d56/unicorns/${this.edit._id}`,
           {
             name: this.edit.name,
             age: this.edit.age,
@@ -90,6 +88,7 @@ export default {
           if (res) {
             this.makeToast();
             this.$store.dispatch("getPosts");
+            this.loading = false;
           } else {
             this.errToast();
           }
@@ -117,7 +116,7 @@ export default {
       });
     },
   },
-  props: ["edit"],
+  props: ["edit", "loading"],
   emits: {
     formData: (users) => {},
   },
